@@ -1,29 +1,28 @@
 // src/ChecklistMorning.jsx
 import React from 'react';
-import TradingViewWidget from './TradingViewWidget';
 
 function ChecklistMorning() {
-  return (
-    <div className="checklist">
-      <h2>🕖 Checklist previo a TAXI (7am – 9:30am)</h2>
-      <ul>
-        <li>✅ Encender plataforma CODE BROKER</li>
-        <li>✅ Validar conexión a TradingView-CEREBRO</li>
-        <li>✅ Confirmar horario institucional (mercado abierto)</li>
-        <li>✅ Verificar si es día operativo o feriado</li>
-        <li>✅ Consultar osciladores en META, NVDA y AMD</li>
-        <li>✅ Evaluar señal institucional con fuerza relativa</li>
-        <li>✅ Confirmar reglas de entrada activas en CEREBRO</li>
-        <li>✅ Elegir activo más fuerte para TAXI</li>
-        <li>✅ Registrar activo en eToro (sin SL/TP)</li>
-        <li>✅ Prepararse para ejecución de TAXI (9:30 a.m.)</li>
-      </ul>
+  const lista = [
+    'Encender plataforma CODE BROKER',
+    'Validar conexión a TradingView-CEREBRO',
+    'Confirmar horario institucional (mercado abierto)',
+    'Verificar si es día operativo o feriado',
+    'Consultar osciladores en META, NVDA y AMD',
+    'Evaluar señal institucional con fuerza relativa',
+    'Confirmar reglas de entrada activas en CEREBRO',
+    'Elegir activo más fuerte para TAXI',
+    'Registrar activo en eToro (sin SL/TP)',
+    'Prepararse para ejecución de TAXI (9:30 a.m.)',
+  ];
 
-      <div className="graficos">
-        <TradingViewWidget symbol="META" />
-        <TradingViewWidget symbol="NVDA" />
-        <TradingViewWidget symbol="AMD" />
-      </div>
+  return (
+    <div style={{ backgroundColor: '#1a1a1a', padding: '20px', borderRadius: '12px', marginBottom: '20px' }}>
+      <h3>🕖 Checklist previo a TAXI (7am – 9:30am)</h3>
+      <ul style={{ listStyleType: 'none', padding: 0 }}>
+        {lista.map((item, i) => (
+          <li key={i} style={{ marginBottom: '6px' }}>✅ {item}</li>
+        ))}
+      </ul>
     </div>
   );
 }
