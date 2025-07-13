@@ -1,36 +1,22 @@
 // src/TradingViewWidget.jsx
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 function TradingViewWidget({ symbol }) {
-  const containerRef = useRef();
+  const src = `https://s.tradingview.com/embed-widget/symbol-overview/?locale=en#%7B%22symbols%22%3A%5B%5B%22NASDAQ%3A${symbol}%22%5D%5D%2C%22width%22%3A%22100%25%22%2C%22height%22%3A250%2C%22isTransparent%22%3Atrue%2C%22colorTheme%22%3A%22dark%22%2C%22autosize%22%3Atrue%7D`;
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/tv.js';
-    script.async = true;
-    script.onload = () => {
-      if (window.TradingView) {
-        new window.TradingView.widget({
-          container_id: containerRef.current.id,
-          width: '100%',
-          height: 400,
-          symbol: `NASDAQ:${symbol}`,
-          interval: '1',
-          timezone: 'Etc/UTC',
-          theme: 'dark',
-          style: '1', // velas
-          locale: 'es',
-          toolbar_bg: '#f1f3f6',
-          hide_top_toolbar: true,
-          save_image: false,
-        });
-      }
-    };
-    document.body.appendChild(script);
-  }, [symbol]);
-
-  return <div id={`tv-${symbol}`} ref={containerRef} style={{ marginBottom: '30px' }} />;
+  return (
+    <div style={{ flex: 1, padding: '10px' }}>
+      <iframe
+        src={src}
+        width="100%"
+        height="250"
+        frameBorder="0"
+        allowTransparency="true"
+        scrolling="no"
+        title={`TradingView ${symbol}`}
+      ></iframe>
+    </div>
+  );
 }
 
 export default TradingViewWidget;
-
