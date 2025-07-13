@@ -1,68 +1,46 @@
-import React from "react";
-import ScheduleInfo from "./components/ScheduleInfo";
+import React from 'react';
 
-const TradingViewWidget = ({ symbol, candle = false }) => {
-  const src = `https://s.tradingview.com/embed-widget/mini-symbol-overview/?locale=en#{
-    encodeURIComponent(
-      JSON.stringify({
-        symbol: `NASDAQ:${symbol}`,
-        width: "100%",
-        height: candle ? 300 : 200,
-        locale: "en",
-        dateRange: candle ? "1D" : "12h",
-        colorTheme: "dark",
-        isTransparent: false,
-        autosize: true,
-        chartOnly: false,
-        scalePosition: "right",
-        scaleMode: 1,
-        fontFamily: "Arial",
-        noTimeScale: false,
-        chartType: candle ? "candlesticks" : "area",
-        lineWidth: 2,
-        upColor: "#22c55e",
-        downColor: "#ef4444",
-        borderUpColor: "#22c55e",
-        borderDownColor: "#ef4444",
-        wickUpColor: "#22c55e",
-        wickDownColor: "#ef4444",
-      })
-    )
-  }`;
+const Widget = ({ symbol, title }) => (
+  <div className="bg-gray-800 rounded-2xl p-2 shadow">
+    <h2 className="text-xl font-semibold mb-2 text-center">{title}</h2>
 
-  return (
-    <div className="rounded-xl overflow-hidden shadow-md border border-gray-700 my-2">
+    <div className="mb-4">
+      {/* Gráfico de velas */}
       <iframe
-        title={`TradingView ${symbol}`}
-        src={src}
+        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_candles_${symbol}&symbol=${symbol}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1`}
+        width="100%"
+        height="300"
         frameBorder="0"
-        className="w-full"
-        style={{ height: candle ? 300 : 200 }}
-        allowFullScreen
-      />
+        allowTransparency="true"
+        scrolling="no"
+        title={`Candlestick - ${title}`}
+      ></iframe>
     </div>
-  );
-};
 
-const AssetCard = ({ name }) => (
-  <div className="bg-gray-800 rounded-2xl p-4 shadow">
-    <h2 className="text-lg font-semibold mb-2 text-center">{name}</h2>
-    <TradingViewWidget symbol={name} candle />
-    <TradingViewWidget symbol={name} candle={false} />
+    <div>
+      {/* Gráfico de precio en línea */}
+      <iframe
+        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_price_${symbol}&symbol=${symbol}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=2&timezone=Etc%2FUTC&withdateranges=1`}
+        width="100%"
+        height="200"
+        frameBorder="0"
+        allowTransparency="true"
+        scrolling="no"
+        title={`Price - ${title}`}
+      ></iframe>
+    </div>
   </div>
 );
 
 const App = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-3xl font-bold mb-2">CODE BROKER</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">CODE BROKER</h1>
 
-      <ScheduleInfo />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <AssetCard name="META" />
-        <AssetCard name="NVDA" />
-        <AssetCard name="AMD" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Widget symbol="NASDAQ:META" title="META" />
+        <Widget symbol="NASDAQ:NVDA" title="NVDA" />
+        <Widget symbol="NASDAQ:AMD" title="AMD" />
       </div>
     </div>
   );
