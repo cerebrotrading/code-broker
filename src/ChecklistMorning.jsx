@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from 'react';
 
-const checklistItems = [
-  "✅ Confirmar que hoy es un día operativo (lunes a viernes).",
-  "✅ Validar que no es día festivo en EE.UU.",
-  "✅ Revisar los osciladores institucionales (META, NVDA, AMD).",
-  "✅ Confirmar fuerza relativa y tendencias mayores.",
-  "✅ Determinar el activo más fuerte para ejecutar TAXI.",
-  "✅ Validar apertura del mercado sin GAP anormal.",
-  "✅ Revisar ATR para ajustar el SL táctico.",
-];
-
 const ChecklistMorning = () => {
+  const checklistItems = [
+    '✅ Encender plataforma CODE BROKER',
+    '✅ Validar conexión a TradingView-CEREBRO',
+    '✅ Confirmar horario institucional (mercado abierto)',
+    '✅ Verificar si es día operativo o feriado',
+    '✅ Consultar osciladores en META, NVDA y AMD',
+    '✅ Evaluar señal institucional con fuerza relativa',
+    '✅ Confirmar reglas de entrada activas en CEREBRO',
+    '✅ Elegir activo más fuerte para TAXI',
+    '✅ Registrar activo en eToro (sin SL/TP)',
+    '✅ Prepararse para ejecución de TAXI (9:30 a.m.)',
+  ];
+
   const [currentItem, setCurrentItem] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentItem((prev) => (prev < checklistItems.length - 1 ? prev + 1 : prev));
-    }, 30000); // muestra un ítem cada 30 segundos
-    return () => clearInterval(interval);
-  }, []);
+    if (currentItem < checklistItems.length - 1) {
+      const interval = setInterval(() => {
+        setCurrentItem((prev) => prev + 1);
+      }, 10000); // muestra 1 nuevo ítem cada 10 segundos (ajustable)
+      return () => clearInterval(interval);
+    }
+  }, [currentItem]);
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-4 shadow mt-4">
-      <h2 className="text-xl font-bold mb-2">Checklist previo a TAXI (7am a 9:30am)</h2>
-      <ul className="list-disc list-inside text-sm">
+    <div className="bg-gray-800 rounded-2xl p-4 shadow mt-6">
+      <h2 className="text-xl font-bold mb-4">🕖 Checklist previo a TAXI (7am – 9:30am)</h2>
+      <ul className="list-disc list-inside text-sm space-y-1">
         {checklistItems.slice(0, currentItem + 1).map((item, index) => (
-          <li key={index} className="mb-1">{item}</li>
+          <li key={index} className="text-green-400">{item}</li>
         ))}
       </ul>
     </div>
