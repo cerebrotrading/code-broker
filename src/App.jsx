@@ -1,46 +1,76 @@
 import React from 'react';
 
-const Widget = ({ symbol, title }) => (
-  <div className="bg-gray-800 rounded-2xl p-2 shadow">
-    <h2 className="text-xl font-semibold mb-2 text-center">{title}</h2>
+const activos = ['META', 'NVDA', 'AMD'];
+const horaActual = new Date().toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/New_York' });
+const diaActual = new Date().toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' });
+const hoyEsFeriado = () => {
+  const dia = new Date().getDay(); // 0 = domingo, 6 = sábado
+  return dia === 0 || dia === 6;
+};
 
-    <div className="mb-4">
-      {/* Gráfico de velas */}
-      <iframe
-        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_candles_${symbol}&symbol=${symbol}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1`}
-        width="100%"
-        height="300"
-        frameBorder="0"
-        allowTransparency="true"
-        scrolling="no"
-        title={`Candlestick - ${title}`}
-      ></iframe>
-    </div>
+// Determinar la fase operativa
+const obtenerFase = () => {
+  const hora = parseInt(horaActual.split(':')[0], 10);
+  const minuto = parseInt(horaActual.split(':')[1], 10);
+  const totalMinutos = hora * 60 + minuto;
 
-    <div>
-      {/* Gráfico de precio en línea */}
-      <iframe
-        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_price_${symbol}&symbol=${symbol}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=2&timezone=Etc%2FUTC&withdateranges=1`}
-        width="100%"
-        height="200"
-        frameBorder="0"
-        allowTransparency="true"
-        scrolling="no"
-        title={`Price - ${title}`}
-      ></iframe>
-    </div>
-  </div>
-);
+  if (totalMinutos < 570) return '⏳ Fase previa (antes de 9:30 a.m.)';
+  if (totalMinutos >= 570 && totalMinutos < 585) return '🚕 TAXI (9:30 – 9:45 a.m.)';
+  if (totalMinutos >= 645 && totalMinutos < 660) return '🕚 Ajustes tácticos (10:45 – 11:00 a.m.)';
+  if (totalMinutos >= 810 && totalMinutos < 930) return '🕒 Cierre parcial (13:30)';
+  if (totalMinutos >= 930 && totalMinutos < 990) return '⏹️ Cierre total obligatorio (15:30)';
+  return '🔁 Jornada en curso';
+};
 
 const App = () => {
+  const fase = obtenerFase();
+  const feriado = hoyEsFeriado();
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">CODE BROKER</h1>
+      <h1 className="text-3xl font-bold mb-2">CODE BROKER</h1>
+      <p className="text-sm mb-2">📅 Hoy: {diaActual}</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Widget symbol="NASDAQ:META" title="META" />
-        <Widget symbol="NASDAQ:NVDA" title="NVDA" />
-        <Widget symbol="NASDAQ:AMD" title="AMD" />
+      {feriado ? (
+        <div className="bg-red-800 text-white p-3 rounded-xl mb-4">
+          ⛔ Hoy no es un día operativo. Las estrategias están ocultas.
+        </div>
+      ) : (
+        <div className="bg-green-800 text-white p-3 rounded-xl mb-4">
+          🧠 {fase}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {activos.map((ticker) => (
+          <div key={ticker} className="bg-gray-800 rounded-2xl p-2 shadow">
+            <h2 className="text-lg font-bold mb-1">{ticker}</h2>
+
+            {/* Gráfico de velas */}
+            <div className="mb-2">
+              <iframe
+                title={`candles-${ticker}`}
+                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_candles&symbol=NASDAQ%3A${ticker}&interval=5&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hide_side_toolbar=true&allow_symbol_change=false`}
+                width="100%"
+                height="250"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+
+            {/* Gráfico de precio lineal */}
+            <div>
+              <iframe
+                title={`price-${ticker}`}
+                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_price&symbol=NASDAQ%3A${ticker}&interval=5&hidesidetoolbar=1&theme=dark&style=2&timezone=Etc%2FUTC&withdateranges=1&hide_side_toolbar=true&allow_symbol_change=false`}
+                width="100%"
+                height="150"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
