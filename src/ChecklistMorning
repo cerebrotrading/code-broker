@@ -1,47 +1,51 @@
-import React, { useState, useEffect } from 'react';
-
-const checklistItems = [
-  "✅ Revisar calendario económico",
-  "✅ Confirmar si es día operativo",
-  "✅ Validar osciladores técnicos (META, NVDA, AMD)",
-  "✅ Analizar pre-market y tendencias en TradingView",
-  "✅ Identificar activo más fuerte para TAXI",
-  "✅ Confirmar señales institucionales en pilares"
-];
+import React, { useEffect, useState } from 'react';
 
 const ChecklistMorning = () => {
-  const [currentItem, setCurrentItem] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(-1);
+  const [mostrarChecklist, setMostrarChecklist] = useState(false);
+
+  const horaActual = new Date();
+  const hora = horaActual.getHours();
+  const minutos = horaActual.getMinutes();
+  const ahoraEnMinutos = hora * 60 + minutos;
+
+  const inicio = 7 * 60;      // 7:00 a.m.
+  const fin = 9 * 60 + 30;    // 9:30 a.m.
+
+  const checklistItems = [
+    '✅ Revisar noticias macroeconómicas (premercado)',
+    '✅ Validar fuerza relativa de META, NVDA, AMD',
+    '✅ Verificar tendencia en marcos mayores (1H, 4H)',
+    '✅ Confirmar osciladores CODE (RSI, MACD)',
+    '✅ Validar soporte institucional en TradingView-CEREBRO',
+    '✅ Revisar GAP o posibles movimientos en apertura',
+    '✅ Escoger el activo más fuerte para TAXI',
+    '✅ Cargar plan en memoria CODE antes de 9:30 a.m.',
+  ];
 
   useEffect(() => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
+    if (ahoraEnMinutos >= inicio && ahoraEnMinutos <= fin) {
+      setMostrarChecklist(true);
+      const intervalo = setInterval(() => {
+        setCurrentItem((prev) => {
+          if (prev < checklistItems.length - 1) return prev + 1;
+          clearInterval(intervalo);
+          return prev;
+        });
+      }, 20000); // cada 20 segundos aparece un ítem
 
-    // Mostrar el checklist solo entre 7:00 y 9:30 a.m.
-    if (hours === 7 || hours === 8 || (hours === 9 && minutes < 30)) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
+      return () => clearInterval(intervalo);
     }
   }, []);
 
-  useEffect(() => {
-    if (!isVisible || currentItem >= checklistItems.length) return;
-    const interval = setInterval(() => {
-      setCurrentItem(prev => prev + 1);
-    }, 30000); // cada 30 segundos
-    return () => clearInterval(interval);
-  }, [isVisible, currentItem]);
-
-  if (!isVisible) return null;
+  if (!mostrarChecklist) return null;
 
   return (
     <div className="bg-gray-800 rounded-2xl p-4 shadow mt-4">
       <h2 className="text-xl font-bold mb-2">🕖 Checklist previo a TAXI (7:00 - 9:30 a.m.)</h2>
       <ul className="list-disc list-inside text-sm">
         {checklistItems.slice(0, currentItem + 1).map((item, index) => (
-          <li key={index}>{item}</li>
+          <li key={index} className="mb-1">{item}</li>
         ))}
       </ul>
     </div>
@@ -49,3 +53,4 @@ const ChecklistMorning = () => {
 };
 
 export default ChecklistMorning;
+
