@@ -1,31 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 
 const ScheduleInfo = () => {
-  const now = new Date();
-  const day = now.getDay(); // 0 (Domingo) a 6 (Sábado)
-  const hour = now.getHours();
-  const minute = now.getMinutes();
+  const [day, setDay] = useState('');
+  const [time, setTime] = useState('');
 
-  // Verificar si es fin de semana
-  const isWeekend = day === 0 || day === 6;
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const weekday = now.toLocaleDateString('es-CO', {
+        weekday: 'long',
+        timeZone: 'America/Bogota'
+      });
+      const hour = now.toLocaleTimeString('es-CO', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'America/Bogota'
+      });
+      setDay(weekday.charAt(0).toUpperCase() + weekday.slice(1));
+      setTime(hour);
+    };
 
-  // Convertir a hora decimal (por ejemplo, 9:45 = 9.75)
-  const time = hour + minute / 60;
+    updateTime(); // inicial
+    const interval = setInterval(updateTime, 60000); // actualiza cada minuto
 
-  // Horario operativo: entre 9:30 y 15:30 (hora local)
-  const isOperational = time >= 9.5 && time <= 15.5;
-
-  if (isWeekend || !isOperational) {
-    return (
-      <div className="bg-red-800 text-white p-3 rounded-xl shadow text-center text-sm">
-        ⛔ Hoy no es un día operativo. Las estrategias están ocultas.
-      </div>
-    );
-  }
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="bg-green-800 text-white p-3 rounded-xl shadow text-center text-sm">
-      ✅ Estrategia CODE activa. Monitorea G/P en eToro y reporta a Eddie.
+    <div className="text-sm text-gray-300 mb-2">
+      📅 Hoy: <span className="font-semibold">{day}</span> 🕒 Hora actual: <span className="font-semibold">{time}</span>
     </div>
   );
 };
