@@ -1,41 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React from "react";
+import { useSimulacion } from "./SimulacionContext";
 
 const ChecklistMorning = () => {
+  const { simulacionActiva } = useSimulacion();
+
   const checklistItems = [
-    '✅ Encender plataforma CODE BROKER',
-    '✅ Validar conexión a TradingView-CEREBRO',
-    '✅ Confirmar horario institucional (mercado abierto)',
-    '✅ Verificar si es día operativo o feriado',
-    '✅ Consultar osciladores en META, NVDA y AMD',
-    '✅ Evaluar señal institucional con fuerza relativa',
-    '✅ Confirmar reglas de entrada activas en CEREBRO',
-    '✅ Elegir activo más fuerte para TAXI',
-    '✅ Registrar activo en eToro (sin SL/TP)',
-    '✅ Prepararse para ejecución de TAXI (9:30 a.m.)',
+    "Encender plataforma CODE BROKER",
+    "Validar conexión a TradingView-CEREBRO",
+    "Confirmar horario institucional (mercado abierto)",
+    "Verificar si es día operativo o feriado",
+    "Consultar osciladores en META, NVDA y AMD",
+    "Evaluar señal institucional con fuerza relativa",
+    "Confirmar reglas de entrada activas en CEREBRO",
+    "Elegir activo más fuerte para TAXI",
+    "Registrar activo en eToro (sin SL/TP)",
+    "Prepararse para ejecución de TAXI (9:30 a.m.)",
   ];
 
-  const [currentItem, setCurrentItem] = useState(0);
-
-  useEffect(() => {
-    if (currentItem < checklistItems.length - 1) {
-      const interval = setInterval(() => {
-        setCurrentItem((prev) => prev + 1);
-      }, 10000); // muestra 1 nuevo ítem cada 10 segundos
-      return () => clearInterval(interval);
-    }
-  }, [currentItem]);
-
   return (
-    <div className="bg-gray-800 rounded-2xl p-4 shadow mt-6">
-      <h2 className="text-xl font-bold mb-4">🕖 Checklist previo a TAXI (7am – 9:30am)</h2>
-      <ul className="list-disc list-inside text-sm space-y-1">
-        {checklistItems.slice(0, currentItem + 1).map((item, index) => (
-          <li key={index} className="text-green-400">{item}</li>
+    <div className="mt-6">
+      <h2 className="text-lg font-bold text-white mb-2">
+        🕖 Checklist previo a TAXI (7am – 9:30am)
+      </h2>
+      <ul className="list-none text-sm text-gray-200">
+        {checklistItems.map((item, index) => (
+          <li key={index} className="mb-1">
+            ✅ {item}
+          </li>
         ))}
       </ul>
+
+      {simulacionActiva && (
+        <div className="mt-4 text-green-400 font-semibold">
+          🟢 Modo simulación activo – checklist completado en entorno simulado.
+        </div>
+      )}
     </div>
   );
 };
 
 export default ChecklistMorning;
+
 
