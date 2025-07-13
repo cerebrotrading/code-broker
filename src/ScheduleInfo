@@ -20,12 +20,11 @@ const ScheduleInfo = () => {
   return (
     <div className="text-sm text-gray-300 mb-2">
       <span role="img" aria-label="calendar">📅</span> Hoy: <span className="font-semibold">{day}</span>
-      <span className="mx-2" />
+      <span className="mx-2"></span>
       <span role="img" aria-label="clock">🕒</span> Hora actual: <span className="font-semibold">{time}</span>
     </div>
   );
 };
 
 export default ScheduleInfo;
-
 
