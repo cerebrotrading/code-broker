@@ -21,3 +21,9 @@
     "@vitejs/plugin-react": "^4.0.0"
   }
 }
+{
+  "name": "code-broker",
+  "version": "1.0.0",
+  "type": "module",
+  ...
+}
