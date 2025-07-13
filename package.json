@@ -1,10 +1,13 @@
 {
   "name": "code-broker",
   "version": "1.0.0",
+  "description": "Sistema de monitoreo táctico CODE Broker (META, NVDA, AMD)",
+  "main": "index.html",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite preview"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -14,6 +17,7 @@
     "vite": "^4.5.0",
     "tailwindcss": "^3.3.2",
     "postcss": "^8.4.21",
-    "autoprefixer": "^10.4.13"
+    "autoprefixer": "^10.4.13",
+    "@vitejs/plugin-react": "^4.0.0"
   }
 }
