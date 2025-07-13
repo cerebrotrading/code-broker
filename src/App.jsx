@@ -1,72 +1,86 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ScheduleInfo from './ScheduleInfo';
 import ChecklistMorning from './ChecklistMorning';
 
-const today = new Date();
-const day = today.toLocaleDateString('en-US', { weekday: 'long' });
-const hour = today.getHours();
-
-const isWeekday = today.getDay() >= 1 && today.getDay() <= 5;
-const isMarketTime = hour >= 9 && hour < 16;
-const isPreTaxi = hour >= 7 && (hour < 9 || (hour === 9 && today.getMinutes() < 30));
-
 const App = () => {
-  const [showSim, setShowSim] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [isSimulacion, setIsSimulacion] = useState(false);
 
-  const handleToggleSim = () => {
-    setShowSim(!showSim);
-  };
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const day = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
+  const hour = currentTime.getHours();
+  const isWeekday = currentTime.getDay() >= 1 && currentTime.getDay() <= 5;
+  const isOperativo = isWeekday;
+  const isAntesTaxi = hour >= 7 && hour < 9.5;
+  const showChecklist = (isOperativo && isAntesTaxi) || isSimulacion;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
       <h1 className="text-3xl font-bold mb-2">CODE BROKER</h1>
-      <p className="text-sm mb-4">📅 Hoy: {day}</p>
+      <p className="text-sm text-gray-300 mb-4">
+        📅 Hoy: <span className="font-semibold">{day}</span> | 🕒 {currentTime.toLocaleTimeString()}
+      </p>
 
-      {isWeekday ? (
-        <>
-          {(isPreTaxi || showSim) && <ChecklistMorning />}
-          <div className="mt-4">
-            {isMarketTime || isPreTaxi || showSim ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                {['META', 'NVDA', 'AMD'].map((ticker) => (
-                  <div key={ticker} className="bg-gray-800 rounded-2xl p-2 shadow">
-                    <h2 className="text-xl font-bold mb-2">{ticker}</h2>
-                    <div className="mb-2">
-                      <iframe
-                        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_candles&symbol=NASDAQ%3A${ticker}&interval=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC`}
-                        width="100%"
-                        height="300"
-                        allowFullScreen
-                      />
-                    </div>
-                    <div>
-                      <iframe
-                        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_price&symbol=NASDAQ%3A${ticker}&interval=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=2&timezone=Etc%2FUTC`}
-                        width="100%"
-                        height="150"
-                        allowFullScreen
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-yellow-400 mt-4">⏳ Fase previa (antes de 9:30 a.m.)</p>
-            )}
-          </div>
-          {!isMarketTime && (
-            <button
-              onClick={handleToggleSim}
-              className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-2xl shadow"
-            >
-              {showSim ? '🔒 Salir de simulación' : '🧪 Activar simulación'}
-            </button>
-          )}
-        </>
-      ) : (
-        <p className="text-red-400 text-lg mt-4">
-          ⛔ Hoy no es un día operativo. Las estrategias están ocultas.
-        </p>
-      )}
+      {/* Gráficos visibles siempre */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gray-800 rounded-2xl p-4 shadow">
+          <h2 className="text-xl font-semibold mb-2">META</h2>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:META&locale=es&dateRange=1D&colorTheme=dark&isTransparent=true&autosize=true"
+            width="100%" height="200" frameBorder="0"
+          ></iframe>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:META&interval=1&theme=dark&style=1&hide_top_toolbar=true&hide_side_toolbar=true&withdateranges=false&autosize=true"
+            width="100%" height="200" frameBorder="0"
+          ></iframe>
+        </div>
+
+        <div className="bg-gray-800 rounded-2xl p-4 shadow">
+          <h2 className="text-xl font-semibold mb-2">NVDA</h2>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:NVDA&locale=es&dateRange=1D&colorTheme=dark&isTransparent=true&autosize=true"
+            width="100%" height="200" frameBorder="0"
+          ></iframe>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:NVDA&interval=1&theme=dark&style=1&hide_top_toolbar=true&hide_side_toolbar=true&withdateranges=false&autosize=true"
+            width="100%" height="200" frameBorder="0"
+          ></iframe>
+        </div>
+
+        <div className="bg-gray-800 rounded-2xl p-4 shadow">
+          <h2 className="text-xl font-semibold mb-2">AMD</h2>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:AMD&locale=es&dateRange=1D&colorTheme=dark&isTransparent=true&autosize=true"
+            width="100%" height="200" frameBorder="0"
+          ></iframe>
+          <iframe
+            src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:AMD&interval=1&theme=dark&style=1&hide_top_toolbar=true&hide_side_toolbar=true&withdateranges=false&autosize=true"
+            width="100%" height="200" frameBorder="0"
+          ></iframe>
+        </div>
+      </div>
+
+      {/* Botón de simulación */}
+      <div className="mt-6">
+        <button
+          onClick={() => setIsSimulacion(!isSimulacion)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow"
+        >
+          {isSimulacion ? '❌ Salir de Simulación' : '🧪 Modo Simulación'}
+        </button>
+      </div>
+
+      {/* Mostrar checklist de 7–9:30am */}
+      {showChecklist && <ChecklistMorning />}
+
+      {/* Información de horario estratégico */}
+      <div className="mt-6">
+        <ScheduleInfo />
+      </div>
     </div>
   );
 };
