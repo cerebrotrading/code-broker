@@ -10,7 +10,7 @@ const CandleWidget = ({ symbol }) => (
   <iframe
     src={`https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:${symbol}&theme=dark&style=1&interval=5&hide_top_toolbar=true&hide_legend=true`}
     width="100%"
-    height="600"
+    height="450"
     frameBorder="0"
     allowTransparency="true"
     scrolling="no"
@@ -22,7 +22,7 @@ const PriceWidget = ({ symbol }) => (
   <iframe
     src={`https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:${symbol}&width=100%&height=150&locale=en&dateRange=1D&colorTheme=dark&trendLineColor=rgba(255,255,255,1)&underLineColor=rgba(0, 0, 0, 0)&isTransparent=false&autosize=true`}
     width="100%"
-    height="350"
+    height="250"
     frameBorder="0"
     allowTransparency="true"
     scrolling="no"
