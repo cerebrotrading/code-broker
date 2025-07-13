@@ -2,7 +2,7 @@ import React from 'react';
 
 const CandleChart = ({ symbol }) => (
   <iframe
-    src={`https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:${symbol}&theme=dark&style=1&interval=5&hide_legend=true&hide_side_toolbar=false&allow_symbol_change=false`}
+    src={`https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:${symbol}&interval=5&theme=dark&style=1&locale=en`}
     style={{ width: "100%", height: "300px", border: "none" }}
     allowTransparency="true"
     scrolling="no"
