@@ -3,7 +3,7 @@ import ChecklistMorning from "./ChecklistMorning";
 import ScheduleInfo from "./ScheduleInfo";
 import { SimulacionProvider } from "./SimulacionContext";
 import ToggleSimulacion from "./ToggleSimulacion";
-import TradingViewWidget from "./components/TradingViewWidget";
+import TradingViewWidget from './TradingViewWidget';
 
 export default function App() {
   return (
