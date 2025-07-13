@@ -1,43 +1,32 @@
 import React from 'react';
 
+const activos = [
+  { ticker: 'NASDAQ:META', nombre: 'META' },
+  { ticker: 'NASDAQ:NVDA', nombre: 'NVDA' },
+  { ticker: 'NASDAQ:AMD', nombre: 'AMD' },
+];
+
 const TradingViewWidget = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-      {/* META */}
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-        <div className="text-center font-bold text-lg text-black py-2">META</div>
-        <iframe
-          className="w-full"
-          style={{ height: "450px" }}
-          src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:META&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=America%2FNew_York&withdateranges=1&hideideas=1&studies_overrides={}"
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-      </div>
-
-      {/* NVDA */}
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-        <div className="text-center font-bold text-lg text-black py-2">NVDA</div>
-        <iframe
-          className="w-full"
-          style={{ height: "450px" }}
-          src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:NVDA&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=America%2FNew_York&withdateranges=1&hideideas=1&studies_overrides={}"
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-      </div>
-
-      {/* AMD */}
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-        <div className="text-center font-bold text-lg text-black py-2">AMD</div>
-        <iframe
-          className="w-full"
-          style={{ height: "450px" }}
-          src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:AMD&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=America%2FNew_York&withdateranges=1&hideideas=1&studies_overrides={}"
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      {activos.map(({ ticker, nombre }) => (
+        <div
+          key={ticker}
+          className="bg-gray-800 p-2 rounded-xl shadow-md flex flex-col items-center"
+        >
+          <h3 className="text-lg font-semibold text-center mb-2">{nombre}</h3>
+          <iframe
+            src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${nombre}&symbol=${ticker}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=1&hideideas=1&hide_side_toolbar=1&allow_symbol_change=1&details=0&hotlist=0&calendar=0`}
+            width="100%"
+            height="300"
+            frameBorder="0"
+            allowtransparency="true"
+            scrolling="no"
+            allowfullscreen=""
+            className="rounded-md"
+          />
+        </div>
+      ))}
     </div>
   );
 };
