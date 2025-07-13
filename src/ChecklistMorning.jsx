@@ -1,39 +1,31 @@
-import React from "react";
-import ChecklistMorning from "./ChecklistMorning";
-import ScheduleInfo from "./ScheduleInfo";
-import { SimulacionProvider } from "./SimulacionContext";
-import ToggleSimulacion from "./ToggleSimulacion";
-import TradingViewWidget from './TradingViewWidget';
+import React from 'react';
 
-export default function App() {
+function ChecklistMorning() {
+  const items = [
+    'Encender plataforma CODE BROKER',
+    'Validar conexión a TradingView-CEREBRO',
+    'Confirmar horario institucional (mercado abierto)',
+    'Verificar si es día operativo o feriado',
+    'Consultar osciladores en META, NVDA y AMD',
+    'Evaluar señal institucional con fuerza relativa',
+    'Confirmar reglas de entrada activas en CEREBRO',
+    'Elegir activo más fuerte para TAXI',
+    'Registrar activo en eToro (sin SL/TP)',
+    'Prepararse para ejecución de TAXI (9:30 a.m.)',
+  ];
+
   return (
-    <SimulacionProvider>
-      <div className="min-h-screen bg-gray-900 text-white p-4">
-        <h1 className="text-3xl font-bold mb-4 text-center">CODE BROKER</h1>
-        <div className="flex justify-between items-center mb-4">
-          <ScheduleInfo />
-          <ToggleSimulacion />
-        </div>
-
-        <ChecklistMorning />
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <h2 className="text-xl font-semibold mb-2 text-center">META</h2>
-            <TradingViewWidget symbol="NASDAQ:META" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold mb-2 text-center">NVDA</h2>
-            <TradingViewWidget symbol="NASDAQ:NVDA" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold mb-2 text-center">AMD</h2>
-            <TradingViewWidget symbol="NASDAQ:AMD" />
-          </div>
-        </div>
-      </div>
-    </SimulacionProvider>
+    <div className="mt-6">
+      <h2 className="text-lg font-semibold mb-2">🕖 Checklist previo a TAXI (7am – 9:30am)</h2>
+      <ul className="list-disc pl-6 space-y-1">
+        {items.map((item, index) => (
+          <li key={index} className="text-green-600">✅ {item}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
+
+export default ChecklistMorning;
 
 
