@@ -2,88 +2,85 @@ import React, { useState, useEffect } from 'react';
 import ScheduleInfo from './ScheduleInfo';
 import ChecklistMorning from './ChecklistMorning';
 
+const assets = [
+  { name: 'META', symbol: 'NASDAQ:META' },
+  { name: 'NVDA', symbol: 'NASDAQ:NVDA' },
+  { name: 'AMD', symbol: 'NASDAQ:AMD' }
+];
+
 const App = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [isSimulacion, setIsSimulacion] = useState(false);
+  const [today, setToday] = useState('');
+  const [hour, setHour] = useState('');
+  const [isOperativo, setIsOperativo] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    const now = new Date();
+    const day = now.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/Bogota' });
+    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' });
+    setToday(day);
+    setHour(time);
+
+    const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+    const isHoliday = false; // Aquí puedes conectar con API de feriados si lo deseas
+    setIsOperativo(!isWeekend && !isHoliday);
   }, []);
 
-  const day = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
-  const hour = currentTime.getHours();
-  const isWeekday = currentTime.getDay() >= 1 && currentTime.getDay() <= 5;
-  const isOperativo = isWeekday;
-  const isAntesTaxi = hour >= 7 && hour < 9.5;
-  const showChecklist = (isOperativo && isAntesTaxi) || isSimulacion;
+  const toggleSimulacion = () => {
+    setIsSimulacion(!isSimulacion);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-3xl font-bold mb-2">CODE BROKER</h1>
-      <p className="text-sm text-gray-300 mb-4">
-        📅 Hoy: <span className="font-semibold">{day}</span> | 🕒 {currentTime.toLocaleTimeString()}
-      </p>
+      <h1 className="text-2xl font-bold mb-2">CODE BROKER</h1>
+      <ScheduleInfo today={today} hour={hour} />
 
-      {/* Gráficos visibles siempre */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gray-800 rounded-2xl p-4 shadow">
-          <h2 className="text-xl font-semibold mb-2">META</h2>
-          <iframe
-            src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:META&locale=es&dateRange=1D&colorTheme=dark&isTransparent=true&autosize=true"
-            width="100%" height="200" frameBorder="0"
-          ></iframe>
-          <iframe
-            src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:META&interval=1&theme=dark&style=1&hide_top_toolbar=true&hide_side_toolbar=true&withdateranges=false&autosize=true"
-            width="100%" height="200" frameBorder="0"
-          ></iframe>
-        </div>
-
-        <div className="bg-gray-800 rounded-2xl p-4 shadow">
-          <h2 className="text-xl font-semibold mb-2">NVDA</h2>
-          <iframe
-            src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:NVDA&locale=es&dateRange=1D&colorTheme=dark&isTransparent=true&autosize=true"
-            width="100%" height="200" frameBorder="0"
-          ></iframe>
-          <iframe
-            src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:NVDA&interval=1&theme=dark&style=1&hide_top_toolbar=true&hide_side_toolbar=true&withdateranges=false&autosize=true"
-            width="100%" height="200" frameBorder="0"
-          ></iframe>
-        </div>
-
-        <div className="bg-gray-800 rounded-2xl p-4 shadow">
-          <h2 className="text-xl font-semibold mb-2">AMD</h2>
-          <iframe
-            src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:AMD&locale=es&dateRange=1D&colorTheme=dark&isTransparent=true&autosize=true"
-            width="100%" height="200" frameBorder="0"
-          ></iframe>
-          <iframe
-            src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:AMD&interval=1&theme=dark&style=1&hide_top_toolbar=true&hide_side_toolbar=true&withdateranges=false&autosize=true"
-            width="100%" height="200" frameBorder="0"
-          ></iframe>
-        </div>
+      <div className="flex justify-end mb-4">
+        {!isOperativo && (
+          <button
+            onClick={toggleSimulacion}
+            className="bg-yellow-500 text-black font-semibold py-1 px-4 rounded-xl shadow hover:bg-yellow-400"
+          >
+            {isSimulacion ? 'Salir de Simulación' : '🔁 Modo Simulación'}
+          </button>
+        )}
       </div>
 
-      {/* Botón de simulación */}
-      <div className="mt-6">
-        <button
-          onClick={() => setIsSimulacion(!isSimulacion)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow"
-        >
-          {isSimulacion ? '❌ Salir de Simulación' : '🧪 Modo Simulación'}
-        </button>
-      </div>
+      {(isOperativo || isSimulacion) && (
+        <>
+          {hour >= '07:00' && hour <= '09:30' && <ChecklistMorning />}
+          {/* Aquí va la estrategia TAXI en caso de estar entre 9:30 y 9:45 */}
+          {/* Puedes añadir más componentes condicionales según la hora */}
+        </>
+      )}
 
-      {/* Mostrar checklist de 7–9:30am */}
-      {showChecklist && <ChecklistMorning />}
-
-      {/* Información de horario estratégico */}
-      <div className="mt-6">
-        <ScheduleInfo />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        {assets.map(asset => (
+          <div key={asset.name} className="bg-gray-800 rounded-2xl p-2 shadow">
+            <h2 className="text-lg font-bold mb-2 text-center">{asset.name}</h2>
+            <div className="aspect-w-16 aspect-h-9 mb-2">
+              <iframe
+                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${asset.name}_1&symbol=${asset.symbol}&interval=5&theme=dark&style=1`}
+                className="w-full h-64"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="aspect-w-16 aspect-h-9">
+              <iframe
+                src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${asset.name}_2&symbol=${asset.symbol}&interval=5&theme=dark&style=3`}
+                className="w-full h-64"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 export default App;
+
 
