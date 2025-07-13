@@ -1,43 +1,40 @@
 import React, { useEffect, useState } from 'react';
 
 const ChecklistMorning = () => {
-  const [currentItem, setCurrentItem] = useState(-1);
-  const [mostrarChecklist, setMostrarChecklist] = useState(false);
-
-  const horaActual = new Date();
-  const hora = horaActual.getHours();
-  const minutos = horaActual.getMinutes();
-  const ahoraEnMinutos = hora * 60 + minutos;
-
-  const inicio = 7 * 60;      // 7:00 a.m.
-  const fin = 9 * 60 + 30;    // 9:30 a.m.
+  const [currentItem, setCurrentItem] = useState(0);
 
   const checklistItems = [
-    '✅ Revisar noticias macroeconómicas (premercado)',
-    '✅ Validar fuerza relativa de META, NVDA, AMD',
-    '✅ Verificar tendencia en marcos mayores (1H, 4H)',
-    '✅ Confirmar osciladores CODE (RSI, MACD)',
-    '✅ Validar soporte institucional en TradingView-CEREBRO',
-    '✅ Revisar GAP o posibles movimientos en apertura',
-    '✅ Escoger el activo más fuerte para TAXI',
-    '✅ Cargar plan en memoria CODE antes de 9:30 a.m.',
+    '✅ Verificar si es día operativo (lunes a viernes, sin feriados)',
+    '✅ Confirmar conexión a TradingView-CEREBRO',
+    '✅ Evaluar osciladores técnicos principales (META, NVDA, AMD)',
+    '✅ Validar alineación institucional con los pilares',
+    '✅ Detectar el activo más fuerte para posible TAXI',
+    '✅ Revisar noticias macroeconómicas relevantes (premercado)',
+    '✅ Estimar SL y TP basado en vela previa y ATR',
+    '✅ Activar sistema de ejecución (preparar eToro)',
   ];
 
   useEffect(() => {
-    if (ahoraEnMinutos >= inicio && ahoraEnMinutos <= fin) {
-      setMostrarChecklist(true);
-      const intervalo = setInterval(() => {
+    const now = new Date();
+    const start = new Date();
+    start.setHours(7, 0, 0);
+    const end = new Date();
+    end.setHours(9, 30, 0);
+
+    if (now >= start && now <= end) {
+      const interval = setInterval(() => {
         setCurrentItem((prev) => {
-          if (prev < checklistItems.length - 1) return prev + 1;
-          clearInterval(intervalo);
-          return prev;
+          if (prev < checklistItems.length - 1) {
+            return prev + 1;
+          } else {
+            clearInterval(interval);
+            return prev;
+          }
         });
-      }, 20000);
-      return () => clearInterval(intervalo);
+      }, 20000); // Muestra un ítem nuevo cada 20 segundos
+      return () => clearInterval(interval);
     }
   }, []);
-
-  if (!mostrarChecklist) return null;
 
   return (
     <div className="bg-gray-800 rounded-2xl p-4 shadow mt-4">
