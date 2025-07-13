@@ -52,7 +52,7 @@ const App = () => {
                 title={`candles-${ticker}`}
                 src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_candles&symbol=NASDAQ%3A${ticker}&interval=5&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hide_side_toolbar=true&allow_symbol_change=false`}
                 width="100%"
-                height="250"
+                height="450"
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
@@ -64,7 +64,7 @@ const App = () => {
                 title={`price-${ticker}`}
                 src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_price&symbol=NASDAQ%3A${ticker}&interval=5&hidesidetoolbar=1&theme=dark&style=2&timezone=Etc%2FUTC&withdateranges=1&hide_side_toolbar=true&allow_symbol_change=false`}
                 width="100%"
-                height="150"
+                height="250"
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
