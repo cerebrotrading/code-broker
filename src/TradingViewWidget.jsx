@@ -8,7 +8,7 @@ const TradingViewWidget = () => {
         <div className="text-center font-bold text-lg text-black py-2">META</div>
         <iframe
           className="w-full"
-          style={{ height: "450px" }}
+          style={{ height: "550px" }}
           src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:META&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=America%2FNew_York&withdateranges=1&hideideas=1&studies_overrides={}"
           frameBorder="0"
           allowFullScreen
@@ -20,7 +20,7 @@ const TradingViewWidget = () => {
         <div className="text-center font-bold text-lg text-black py-2">NVDA</div>
         <iframe
           className="w-full"
-          style={{ height: "450px" }}
+          style={{ height: "550px" }}
           src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:NVDA&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=America%2FNew_York&withdateranges=1&hideideas=1&studies_overrides={}"
           frameBorder="0"
           allowFullScreen
@@ -32,7 +32,7 @@ const TradingViewWidget = () => {
         <div className="text-center font-bold text-lg text-black py-2">AMD</div>
         <iframe
           className="w-full"
-          style={{ height: "450px" }}
+          style={{ height: "550px" }}
           src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:AMD&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=America%2FNew_York&withdateranges=1&hideideas=1&studies_overrides={}"
           frameBorder="0"
           allowFullScreen
