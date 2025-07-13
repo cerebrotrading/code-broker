@@ -1,0 +1,48 @@
+import React from "react";
+
+const ScheduleInfo = () => {
+  const now = new Date();
+  const hour = now.getHours();
+  const minutes = now.getMinutes();
+  const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+  const formattedTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedDate = now.toLocaleDateString();
+
+  let phase = "";
+  if (hour < 9 || (hour === 9 && minutes < 30)) {
+    phase = "⏳ Fase previa (antes de 9:30 a.m.)";
+  } else if (hour === 9 && minutes >= 30 && minutes <= 45) {
+    phase = "🚕 TAXI: Selección y entrada del activo";
+  } else if (hour >= 10 && hour < 11) {
+    phase = "🕚 Ajustes tácticos (SL/TP)";
+  } else if (hour >= 13 && hour < 15) {
+    phase = "🕒 Evaluación o cierre parcial";
+  } else if (hour >= 15 && hour < 16) {
+    phase = "🔚 Cierre total obligatorio (3:30 p.m.)";
+  } else {
+    phase = "🔁 Fuera del horario operativo";
+  }
+
+  const isOperational = !isWeekend && hour >= 9;
+
+  return (
+    <div className="bg-gray-800 p-4 rounded-xl shadow-lg text-white mt-4">
+      <div className="text-sm mb-2">📅 {formattedDate} – 🕒 {formattedTime}</div>
+      <div className="text-lg font-semibold">{phase}</div>
+      {!isOperational && (
+        <div className="text-yellow-400 mt-2">
+          ⚠️ Hoy no es un día operativo. Las estrategias están ocultas.
+        </div>
+      )}
+      {isOperational && hour >= 9 && (
+        <div className="mt-2 text-sm text-green-400">
+          ✅ Estrategia CODE disponible. Esperando confirmación de G/P para ajustes.
+          <br />
+          🎯 SL/TP tentativos: SL = -$20 | TP1 = +$25 | TP2 = +$50
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ScheduleInfo;
