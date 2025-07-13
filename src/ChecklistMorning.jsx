@@ -20,7 +20,7 @@ const ChecklistMorning = () => {
     if (currentItem < checklistItems.length - 1) {
       const interval = setInterval(() => {
         setCurrentItem((prev) => prev + 1);
-      }, 10000); // muestra 1 nuevo ítem cada 10 segundos (ajustable)
+      }, 10000); // muestra 1 nuevo ítem cada 10 segundos
       return () => clearInterval(interval);
     }
   }, [currentItem]);
