@@ -28,14 +28,16 @@ const ChecklistMorning = () => {
           clearInterval(interval);
           return prev;
         });
-      }, 15000); // 15 segundos por ítem
+      }, 15000); // cada 15 segundos aparece un nuevo ítem
       return () => clearInterval(interval);
     }
   }, []);
 
   return (
     <div className="bg-gray-800 rounded-2xl p-4 shadow mt-4">
-      <h2 className="text-xl font-bold mb-2">Checklist previo a TAXI (7am a 9:30am)</h2>
+      <h2 className="text-xl font-bold mb-2">
+        Checklist previo a TAXI (7am a 9:30am)
+      </h2>
       <ul className="list-disc list-inside text-sm">
         {checklistItems.slice(0, currentItem + 1).map((item, index) => (
           <li key={index} className="mb-1">✅ {item}</li>
@@ -46,6 +48,4 @@ const ChecklistMorning = () => {
 };
 
 export default ChecklistMorning;
-
-
 
