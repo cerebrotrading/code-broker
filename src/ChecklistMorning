@@ -1,0 +1,51 @@
+import React, { useState, useEffect } from 'react';
+
+const checklistItems = [
+  "✅ Revisar calendario económico",
+  "✅ Confirmar si es día operativo",
+  "✅ Validar osciladores técnicos (META, NVDA, AMD)",
+  "✅ Analizar pre-market y tendencias en TradingView",
+  "✅ Identificar activo más fuerte para TAXI",
+  "✅ Confirmar señales institucionales en pilares"
+];
+
+const ChecklistMorning = () => {
+  const [currentItem, setCurrentItem] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    // Mostrar el checklist solo entre 7:00 y 9:30 a.m.
+    if (hours === 7 || hours === 8 || (hours === 9 && minutes < 30)) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible || currentItem >= checklistItems.length) return;
+    const interval = setInterval(() => {
+      setCurrentItem(prev => prev + 1);
+    }, 30000); // cada 30 segundos
+    return () => clearInterval(interval);
+  }, [isVisible, currentItem]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="bg-gray-800 rounded-2xl p-4 shadow mt-4">
+      <h2 className="text-xl font-bold mb-2">🕖 Checklist previo a TAXI (7:00 - 9:30 a.m.)</h2>
+      <ul className="list-disc list-inside text-sm">
+        {checklistItems.slice(0, currentItem + 1).map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ChecklistMorning;
