@@ -1,90 +1,80 @@
 import React, { useState, useEffect } from 'react';
+import ChecklistMorning from './ChecklistMorning';
 
-const isTradingDay = () => {
-  const today = new Date();
-  const day = today.getDay();
-  return day >= 1 && day <= 5; // Monday to Friday
-};
+const assets = ['META', 'NVDA', 'AMD'];
+const today = new Date();
+const day = today.toLocaleDateString('en-US', { weekday: 'long' });
 
-const CandleWidget = ({ symbol }) => (
-  <iframe
-    src={`https://s.tradingview.com/embed-widget/advanced-chart/?symbol=NASDAQ:${symbol}&theme=dark&style=1&interval=5&hide_top_toolbar=true&hide_legend=true`}
-    width="100%"
-    height="450"
-    frameBorder="0"
-    allowTransparency="true"
-    scrolling="no"
-    title={`Candle Chart ${symbol}`}
-  ></iframe>
-);
-
-const PriceWidget = ({ symbol }) => (
-  <iframe
-    src={`https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:${symbol}&width=100%&height=150&locale=en&dateRange=1D&colorTheme=dark&trendLineColor=rgba(255,255,255,1)&underLineColor=rgba(0, 0, 0, 0)&isTransparent=false&autosize=true`}
-    width="100%"
-    height="250"
-    frameBorder="0"
-    allowTransparency="true"
-    scrolling="no"
-    title={`Price Chart ${symbol}`}
-  ></iframe>
-);
-
-const AssetPanel = ({ name }) => (
-  <div className="bg-gray-800 rounded-2xl p-4 shadow">
-    <h2 className="text-xl font-bold mb-2">{name}</h2>
-    <CandleWidget symbol={name} />
-    <PriceWidget symbol={name} />
-  </div>
-);
+const isMarketDay = !['Saturday', 'Sunday'].includes(day); // solo lunes a viernes
 
 const App = () => {
-  const [isSimulated, setIsSimulated] = useState(false);
-  const [isOperationalDay, setIsOperationalDay] = useState(isTradingDay());
+  const [simulacionActiva, setSimulacionActiva] = useState(false);
+  const [mostrarEstrategia, setMostrarEstrategia] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsOperationalDay(isTradingDay());
-    }, 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const showStrategy = isOperationalDay || isSimulated;
-
-  const toggleSimulation = () => {
-    setIsSimulated((prev) => !prev);
-  };
-
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+    const now = new Date();
+    const hora = now.getHours();
+    const minutos = now.getMinutes();
+    const isOperativo = isMarketDay && (hora >= 9 && (hora < 15 || (hora === 15 && minutos <= 30)));
+    setMostrarEstrategia(isOperativo || simulacionActiva);
+  }, [simulacionActiva]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
-      <div className="flex justify-between items-center mb-4">
-        <div>
-          <h1 className="text-3xl font-bold">CODE BROKER</h1>
-          <p className="text-sm">📅 Hoy: {today}</p>
-          {!isOperationalDay && !isSimulated && (
-            <p className="text-red-500 font-semibold">⛔ Hoy no es un día operativo. Las estrategias están ocultas.</p>
-          )}
-        </div>
+      <h1 className="text-3xl font-bold mb-4">CODE BROKER</h1>
+      <p className="text-sm mb-2">📅 Hoy: {day}</p>
+
+      {!isMarketDay && !simulacionActiva && (
+        <p className="text-yellow-400 mb-4">
+          ⛔ Hoy no es un día operativo. Las estrategias están ocultas.
+        </p>
+      )}
+
+      {(!isMarketDay || !mostrarEstrategia) && (
         <button
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={toggleSimulation}
+          onClick={() => setSimulacionActiva(!simulacionActiva)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mb-4"
         >
-          {isSimulated ? '🛑 Salir de Simulación' : '▶️ Simulación'}
+          {simulacionActiva ? '🔴 Salir de Simulación' : '🧪 Activar Simulación'}
         </button>
+      )}
+
+      <ChecklistMorning />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {assets.map((ticker) => (
+          <div key={ticker} className="bg-gray-800 rounded-2xl p-2 shadow">
+            <h2 className="text-xl font-semibold mb-2 text-center">{ticker}</h2>
+            {/* Gráfico de velas */}
+            <iframe
+              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_candles&symbol=NASDAQ%3A${ticker}&interval=5&symboledit=1&saveimage=1&toolbarbg=f1f3f6&theme=dark&style=1&timezone=America%2FNew_York&studies=[]`}
+              width="100%"
+              height="250"
+              frameBorder="0"
+              allowTransparency={true}
+              allowFullScreen={true}
+              title={`Candlestick chart ${ticker}`}
+              className="mb-2 rounded"
+            />
+            {/* Gráfico de precio */}
+            <iframe
+              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}_price&symbol=NASDAQ%3A${ticker}&interval=5&symboledit=1&saveimage=1&toolbarbg=f1f3f6&theme=dark&style=2&timezone=America%2FNew_York`}
+              width="100%"
+              height="120"
+              frameBorder="0"
+              allowTransparency={true}
+              allowFullScreen={true}
+              title={`Line chart ${ticker}`}
+              className="rounded"
+            />
+          </div>
+        ))}
       </div>
 
-      {showStrategy && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <AssetPanel name="META" />
-          <AssetPanel name="NVDA" />
-          <AssetPanel name="AMD" />
+      {mostrarEstrategia && (
+        <div className="mt-6 bg-green-900 p-4 rounded-xl shadow">
+          <h2 className="text-xl font-bold mb-2">✅ Estrategia activa hoy</h2>
+          <p className="text-sm">Se mostrarán aquí los datos de la estrategia TAXI al llegar las 9:30 a.m.</p>
         </div>
       )}
     </div>
