@@ -1,20 +1,21 @@
-// src/ToggleSimulacion.jsx
-import React from 'react';
-import { useSimulacion } from './SimulacionContext';
+import React, { useContext } from 'react';
+import { SimulacionContext } from './SimulacionContext';
 
-export default function ToggleSimulacion() {
-  const { simulacionActiva, toggleSimulacion } = useSimulacion();
+function ToggleSimulacion() {
+  const { simulacionActiva, toggleSimulacion } = useContext(SimulacionContext);
 
   return (
     <button
       onClick={toggleSimulacion}
-      className={`mt-4 px-4 py-2 rounded text-sm font-semibold ${
+      className={`px-4 py-2 rounded-lg font-medium mb-4 ${
         simulacionActiva
-          ? 'bg-green-600 hover:bg-green-700'
-          : 'bg-gray-600 hover:bg-gray-700'
+          ? 'bg-red-500 text-white'
+          : 'bg-blue-500 text-white'
       }`}
     >
-      {simulacionActiva ? '🟢 Simulación Activa' : '🔁 Activar Simulación'}
+      {simulacionActiva ? '🔴 Simulación Activa' : '🔁 Activar Simulación'}
     </button>
   );
 }
+
+export default ToggleSimulacion;
