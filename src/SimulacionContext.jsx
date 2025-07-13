@@ -1,5 +1,5 @@
 // src/SimulacionContext.jsx
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const SimulacionContext = createContext();
 
