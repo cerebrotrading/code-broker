@@ -2,35 +2,34 @@
 import React, { useEffect, useRef } from 'react';
 
 function TradingViewWidget({ symbol }) {
-  const containerRef = useRef(null);
+  const containerRef = useRef();
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+    script.src = 'https://s3.tradingview.com/tv.js';
     script.async = true;
-    script.innerHTML = JSON.stringify({
-      symbol: `NASDAQ:${symbol}`,
-      width: "100%",
-      height: "200",
-      locale: "en",
-      dateRange: "1D",
-      colorTheme: "dark",
-      trendLineColor: "#37a6ef",
-      underLineColor: "rgba(55, 166, 239, 0.15)",
-      isTransparent: false,
-      autosize: true
-    });
-
-    containerRef.current.innerHTML = '';
-    containerRef.current.appendChild(script);
+    script.onload = () => {
+      if (window.TradingView) {
+        new window.TradingView.widget({
+          container_id: containerRef.current.id,
+          width: '100%',
+          height: 400,
+          symbol: `NASDAQ:${symbol}`,
+          interval: '1',
+          timezone: 'Etc/UTC',
+          theme: 'dark',
+          style: '1', // velas
+          locale: 'es',
+          toolbar_bg: '#f1f3f6',
+          hide_top_toolbar: true,
+          save_image: false,
+        });
+      }
+    };
+    document.body.appendChild(script);
   }, [symbol]);
 
-  return (
-    <div style={{ marginBottom: '16px' }}>
-      <h3>{symbol}</h3>
-      <div ref={containerRef} />
-    </div>
-  );
+  return <div id={`tv-${symbol}`} ref={containerRef} style={{ marginBottom: '30px' }} />;
 }
 
 export default TradingViewWidget;
