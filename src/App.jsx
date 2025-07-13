@@ -3,45 +3,91 @@ import ScheduleInfo from './ScheduleInfo';
 import ChecklistMorning from './ChecklistMorning';
 
 const App = () => {
-  const [simulacionActiva, setSimulacionActiva] = useState(false);
+  const [simulationActive, setSimulationActive] = useState(false);
+  const [isMarketDay, setIsMarketDay] = useState(false);
 
-  // 🔁 Activar simulación automáticamente si es día hábil entre 7:00 y 15:30
+  // Determina si es día operativo (lunes a viernes)
   useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
-    const isWeekday = now.getDay() >= 1 && now.getDay() <= 5;
-
-    if (isWeekday && hour >= 7 && hour <= 15) {
-      setSimulacionActiva(true);
-    }
+    const today = new Date().getDay();
+    setIsMarketDay(today >= 1 && today <= 5); // Lunes a viernes
   }, []);
 
+  const toggleSimulation = () => {
+    setSimulationActive(prev => !prev);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen bg-gray-950 text-white p-4 font-sans">
       <h1 className="text-2xl font-bold mb-4">CODE BROKER</h1>
+      
       <ScheduleInfo />
 
-      {simulacionActiva ? (
-        <>
-          <p className="mb-4">🟢 <strong>Simulación Activa</strong></p>
-          <p className="mb-2">Simulación en Curso</p>
-          <p>Aquí puedes ver el estado simulado de los activos:</p>
-          <ul className="list-disc list-inside mb-6">
-            <li><strong>META</strong> – simulación de precio activa</li>
-            <li><strong>NVDA</strong> – monitoreo en curso</li>
-            <li><strong>AMD</strong> – estrategia inactiva</li>
-          </ul>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-gray-800 p-4 rounded-lg">📈 META – Gráfico simulado</div>
-            <div className="bg-gray-800 p-4 rounded-lg">📊 NVDA – Gráfico simulado</div>
-            <div className="bg-gray-800 p-4 rounded-lg">📉 AMD – Gráfico simulado</div>
-          </div>
-        </>
-      ) : (
-        <p className="mb-6">🔁 Modo Simulación</p>
+      {/* Botón para activar simulación solo si es día operativo */}
+      {isMarketDay && (
+        <button
+          onClick={toggleSimulation}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-4"
+        >
+          🔁 {simulationActive ? 'Detener Simulación' : 'Modo Simulación'}
+        </button>
       )}
 
-      <ChecklistMorning />
+      {/* Estado de simulación */}
+      {simulationActive && (
+        <div className="mt-6 bg-gray-800 p-4 rounded">
+          <h2 className="text-xl font-semibold text-green-400 mb-2">🟢 Simulación Activa</h2>
+          <p className="mb-4">Simulación en Curso<br />Aquí puedes ver el estado simulado de los activos:</p>
+          <ul className="list-disc list-inside text-sm text-gray-300">
+            <li>META – simulación de precio activa</li>
+            <li>NVDA – monitoreo en curso</li>
+            <li>AMD – estrategia inactiva</li>
+          </ul>
+        </div>
+      )}
+
+      {/* Checklist táctico */}
+      <div className="mt-8">
+        <ChecklistMorning />
+      </div>
+
+      {/* Gráficos oficiales de TradingView */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
+        {/* META */}
+        <div>
+          <h3 className="font-bold mb-2">📈 META – Gráfico oficial</h3>
+          <iframe
+            src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:META&interval=5&theme=dark&style=1&timezone=America%2FNew_York"
+            width="100%"
+            height="400"
+            style={{ border: 'none' }}
+            allowFullScreen
+          ></iframe>
+        </div>
+
+        {/* NVDA */}
+        <div>
+          <h3 className="font-bold mb-2">📊 NVDA – Gráfico oficial</h3>
+          <iframe
+            src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:NVDA&interval=5&theme=dark&style=1&timezone=America%2FNew_York"
+            width="100%"
+            height="400"
+            style={{ border: 'none' }}
+            allowFullScreen
+          ></iframe>
+        </div>
+
+        {/* AMD */}
+        <div>
+          <h3 className="font-bold mb-2">📉 AMD – Gráfico oficial</h3>
+          <iframe
+            src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:AMD&interval=5&theme=dark&style=1&timezone=America%2FNew_York"
+            width="100%"
+            height="400"
+            style={{ border: 'none' }}
+            allowFullScreen
+          ></iframe>
+        </div>
+      </div>
     </div>
   );
 };
