@@ -1,43 +1,52 @@
-import React from "react";
-import ScheduleInfo from "./ScheduleInfo";
-import ChecklistMorning from "./ChecklistMorning";
-import TradingViewWidget from "./components/TradingViewWidget";
-import { SimulacionProvider } from "./SimulacionContext";
-import ToggleSimulacion from "./ToggleSimulacion";
+import React from 'react';
+import ScheduleInfo from './ScheduleInfo';
+import ChecklistMorning from './ChecklistMorning';
+import TradingViewWidget from './TradingViewWidget';
+import { SimulacionProvider, useSimulacion } from './SimulacionContext';
+import ToggleSimulacion from './ToggleSimulacion'; // ✅ IMPORTACIÓN CORRECTA
 
-const App = () => {
+function ContenidoSimulado() {
+  const { simulacionActiva } = useSimulacion();
+
+  return (
+    <div className="mt-4 space-y-2">
+      {simulacionActiva && (
+        <>
+          <p className="text-green-500 font-semibold">🟢 Simulación Activa</p>
+          <p className="text-sm text-gray-300">Simulación en Curso</p>
+          <ul className="text-sm list-disc list-inside">
+            <li><strong>META</strong> – simulación de precio activa</li>
+            <li><strong>NVDA</strong> – monitoreo en curso</li>
+            <li><strong>AMD</strong> – estrategia inactiva</li>
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+
+function AppContent() {
+  return (
+    <div className="min-h-screen bg-black text-white p-4">
+      <h1 className="text-3xl font-bold mb-2">CODE BROKER</h1>
+      <ScheduleInfo />
+      <ToggleSimulacion />
+      <ContenidoSimulado />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <TradingViewWidget symbol="NASDAQ:META" />
+        <TradingViewWidget symbol="NASDAQ:NVDA" />
+        <TradingViewWidget symbol="NASDAQ:AMD" />
+      </div>
+      <ChecklistMorning />
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <SimulacionProvider>
-      <div className="min-h-screen bg-black text-white p-4">
-        <h1 className="text-2xl font-bold text-center mb-4">CODE BROKER</h1>
-
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start mb-4">
-          <ScheduleInfo />
-          <ToggleSimulacion />
-        </div>
-
-        <ChecklistMorning />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div className="bg-gray-900 p-2 rounded-xl shadow">
-            <h2 className="text-center text-md mb-2">📈 META – Gráfico oficial</h2>
-            <TradingViewWidget symbol="META" />
-          </div>
-
-          <div className="bg-gray-900 p-2 rounded-xl shadow">
-            <h2 className="text-center text-md mb-2">📊 NVDA – Gráfico oficial</h2>
-            <TradingViewWidget symbol="NVDA" />
-          </div>
-
-          <div className="bg-gray-900 p-2 rounded-xl shadow">
-            <h2 className="text-center text-md mb-2">📉 AMD – Gráfico oficial</h2>
-            <TradingViewWidget symbol="AMD" />
-          </div>
-        </div>
-      </div>
+      <AppContent />
     </SimulacionProvider>
   );
-};
-
-export default App;
+}
 
