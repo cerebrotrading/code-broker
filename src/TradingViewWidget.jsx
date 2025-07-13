@@ -1,35 +1,37 @@
-import React from 'react';
+// src/TradingViewWidget.jsx
+import React, { useEffect, useRef } from 'react';
 
-const activos = [
-  { ticker: 'NASDAQ:META', nombre: 'META' },
-  { ticker: 'NASDAQ:NVDA', nombre: 'NVDA' },
-  { ticker: 'NASDAQ:AMD', nombre: 'AMD' },
-];
+function TradingViewWidget({ symbol }) {
+  const containerRef = useRef(null);
 
-const TradingViewWidget = () => {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      symbol: `NASDAQ:${symbol}`,
+      width: "100%",
+      height: "200",
+      locale: "en",
+      dateRange: "1D",
+      colorTheme: "dark",
+      trendLineColor: "#37a6ef",
+      underLineColor: "rgba(55, 166, 239, 0.15)",
+      isTransparent: false,
+      autosize: true
+    });
+
+    containerRef.current.innerHTML = '';
+    containerRef.current.appendChild(script);
+  }, [symbol]);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-      {activos.map(({ ticker, nombre }) => (
-        <div
-          key={ticker}
-          className="bg-gray-800 p-2 rounded-xl shadow-md flex flex-col items-center"
-        >
-          <h3 className="text-lg font-semibold text-center mb-2">{nombre}</h3>
-          <iframe
-            src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${nombre}&symbol=${ticker}&interval=1&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=1&hideideas=1&hide_side_toolbar=1&allow_symbol_change=1&details=0&hotlist=0&calendar=0`}
-            width="100%"
-            height="300"
-            frameBorder="0"
-            allowtransparency="true"
-            scrolling="no"
-            allowfullscreen=""
-            className="rounded-md"
-          />
-        </div>
-      ))}
+    <div style={{ marginBottom: '16px' }}>
+      <h3>{symbol}</h3>
+      <div ref={containerRef} />
     </div>
   );
-};
+}
 
 export default TradingViewWidget;
 
