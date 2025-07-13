@@ -1,20 +1,17 @@
-// src/SimulacionContext.jsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState } from 'react';
 
-const SimulacionContext = createContext();
+export const SimulacionContext = createContext();
 
-export const SimulacionProvider = ({ children }) => {
-  const [isSimulacionActiva, setIsSimulacionActiva] = useState(false);
+export function SimulacionProvider({ children }) {
+  const [simulacionActiva, setSimulacionActiva] = useState(false);
 
   const toggleSimulacion = () => {
-    setIsSimulacionActiva((prev) => !prev);
+    setSimulacionActiva((prev) => !prev);
   };
 
   return (
-    <SimulacionContext.Provider value={{ isSimulacionActiva, toggleSimulacion }}>
+    <SimulacionContext.Provider value={{ simulacionActiva, toggleSimulacion }}>
       {children}
     </SimulacionContext.Provider>
   );
-};
-
-export const useSimulacion = () => useContext(SimulacionContext);
+}
