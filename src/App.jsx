@@ -13,6 +13,8 @@ const App = () => {
     setOperative(isOperativeDay());
   }, []);
 
+  const tickers = ['META', 'NVDA', 'AMD'];
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
       <h1 className="text-2xl font-bold mb-4">CODE BROKER</h1>
@@ -24,18 +26,18 @@ const App = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {['META', 'NVDA', 'AMD'].map((ticker) => (
+        {tickers.map((ticker) => (
           <div key={ticker} className="bg-gray-800 rounded-2xl p-2 shadow">
             <h2 className="text-lg font-semibold mb-2">{ticker}</h2>
             <iframe
-              src={`https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ:${ticker}&locale=es#${ticker}`}
+              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${ticker}&symbol=NASDAQ:${ticker}&interval=5&theme=dark&style=1&locale=es&toolbarbg=F1F3F6`}
               width="100%"
-              height="250"
+              height="400"
               frameBorder="0"
               allowTransparency="true"
               scrolling="no"
+              title={`TradingView-${ticker}`}
               className="rounded-xl"
-              title={`Chart-${ticker}`}
             ></iframe>
           </div>
         ))}
